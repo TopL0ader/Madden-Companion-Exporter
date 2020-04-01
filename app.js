@@ -10,7 +10,7 @@ const serviceAccount = require("./pfl-cfmstats-firebase-adminsdk-hne6e-639897463
 // TODO: Enter your database url from firebase
 admin.initializeApp({
 credential: admin.credential.cert(serviceAccount),
-databaseURL: "https://pfl-cfmstats.firebaseio.com/"
+databaseURL: "https://cfm-stats.firebaseio.com/"
  });
 
 app.set('port', (process.env.PORT || 3001));
