@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/pfl/public_html/stats/
-    - /bin/cp * $DEPLOYPATH
