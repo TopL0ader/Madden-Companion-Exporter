@@ -170,7 +170,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList } = JSON.parse(body);
         const dataRef = ref.child(
-            `data/${username}/${leagueId}/players`
+            `data/${username}/${leagueId}/roster`
         );
         const players = {};
         rosterInfoList.forEach(player => {
