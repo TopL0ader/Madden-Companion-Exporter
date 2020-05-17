@@ -157,7 +157,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     });    
 });
 
-app.post('/:username/:platform/:leagueId/players', (req, res) => {
+app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     const {
@@ -170,7 +170,7 @@ app.post('/:username/:platform/:leagueId/players', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList } = JSON.parse(body);
         const dataRef = ref.child(
-            `data/${username}/${leagueId}/teams/${teamId}/roster`
+            `data/${username}/${leagueId}/players`
         );
         const players = {};
         rosterInfoList.forEach(player => {
