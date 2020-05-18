@@ -174,6 +174,10 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
         );
         const players = {};
         rosterInfoList.forEach(player => {
+            players[team.teamId] = player;
+        });
+		const players = {};
+        rosterInfoList.forEach(player => {
             players[player.rosterId] = player;
         });
         dataRef.set(players, error => {
