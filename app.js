@@ -131,7 +131,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     const {
-        params: { username, leagueId, teamId, rosterId }
+        params: { username, leagueId, teamId }
     } = req;
     let body = '';
     req.on('data', chunk => {
@@ -140,7 +140,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList } = JSON.parse(body);
         const dataRef = ref.child(
-            `data/${username}/${leagueId}/players/${player.rosterId}`
+            `data/${username}/${leagueId}/players/${teamId}/roster`
         );
         const players = {};
         rosterInfoList.forEach(player => {
@@ -161,7 +161,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     const {
-        params: { username, leagueId, teamId, rosterId }
+        params: { username, leagueId, teamId }
     } = req;
     let body = '';
     req.on('data', chunk => {
@@ -170,7 +170,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList } = JSON.parse(body);
         const dataRef = ref.child(
-            `data/${username}/${leagueId}/players/${player.rosterId}`
+            `data/${username}/${leagueId}/players/${teamId}/roster`
         );
         const players = {};
         rosterInfoList.forEach(player => {
