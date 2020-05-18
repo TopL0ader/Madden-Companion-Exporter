@@ -131,7 +131,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     const {
-        params: { username, leagueId, teamId }
+        params: { username, leagueId, teamId, rosterId }
     } = req;
     let body = '';
     req.on('data', chunk => {
@@ -161,7 +161,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     const {
-        params: { username, leagueId, teamId }
+        params: { username, leagueId, teamId, rosterId }
     } = req;
     let body = '';
     req.on('data', chunk => {
