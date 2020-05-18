@@ -140,7 +140,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList } = JSON.parse(body);
         const dataRef = ref.child(
-            `data/${username}/${leagueId}/players/`
+            `data/${username}/${leagueId}/players/${teamId}`
         );
         const players = {};
         rosterInfoList.forEach(player => {
@@ -170,13 +170,9 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList } = JSON.parse(body);
         const dataRef = ref.child(
-            `data/${username}/${leagueId}/players/`
+            `data/${username}/${leagueId}/players/${teamId}`
         );
         const players = {};
-        rosterInfoList.forEach(player => {
-            players[team.teamId] = player;
-        });
-		const players = {};
         rosterInfoList.forEach(player => {
             players[player.rosterId] = player;
         });
