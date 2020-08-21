@@ -55,7 +55,7 @@ app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     });
     req.on('end', () => {
         const { teamStandingInfoList: teams } = JSON.parse(body);
-        const {params: { username, leagueId }} = req;
+        const {params: { username }} = req;
 
         const teamRef = ref.child(`league/${username}/standings`);
         teamRef.update(teams);
@@ -73,7 +73,7 @@ function capitalizeFirstLetter(string) {
 app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
-    const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
+    const { params: { username, weekType, weekNumber, dataType }, } = req;
 
     //const basePath = `${username}/data/week/${weekType}/${weekNumber}/${dataType}`;
     
@@ -87,27 +87,26 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
         switch (dataType) {
             case 'schedules': {
                 const weekRef = ref.child(`league/${username}/schedules/${weekType}/${weekNumber}`);
-                const {} = JSON.parse(body);
+                const {schedules} = JSON.parse(body);
                 weekRef.update(schedules);
                 break;
             }
             case 'teamstats': {
                 const weekRef = ref.child(`league/${username}/teamstats/${weekType}/${weekNumber}`);
-                const {} = JSON.parse(body);
-                weekRef.update(teamStats);
+                const {teamstats} = JSON.parse(body);
+                weekRef.update(teamstats);
                 break;
             }
             case 'defense': {
                 const weekRef = ref.child(`league/${username}/defstats/${weekType}/${weekNumber}`);
-                const {} = JSON.parse(body);
-                weekRef.update(defensiveStats);
+                const {defstats} = JSON.parse(body);
+                weekRef.update(defstats);
                 break;
             }
             default: {
-                const property = `player${capitalizeFirstLetter}`;
                 const weekRef = ref.child(`league/${username}/offstats/${weekType}/${weekNumber}`);
-                const stats = JSON.parse(body)[property];
-                weekRef.update(stats);
+                const {offstats} = JSON.parse(body);
+                weekRef.update(offstats);
                 break;
             }
         }
