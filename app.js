@@ -35,10 +35,10 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const {} = JSON.parse(body);
-        const { params: {username}} = req;
+        const { leagueTeamInfoList: teams } = JSON.parse(body);
+        const { params: { username, leagueId } } = req;
 
-        const teamRef = ref.child(`league/${username}/teams`);
+        const teamRef = ref.child(`league/${username}/leagueteams`);
         teamRef.update(teams);
         
         res.sendStatus(200);
@@ -54,11 +54,11 @@ app.post('/:username/:platform/:leagueId/standings', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const {} = JSON.parse(body);
-        const {params: {username}} = req;
+        const { teamStandingInfoList: teams } = JSON.parse(body);
+        const {params: { username, leagueId }} = req;
 
         const teamRef = ref.child(`league/${username}/standings`);
-        teamRef.update(standings);
+        teamRef.update(teams);
 
         res.sendStatus(200);
     });
@@ -100,14 +100,14 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
             case 'defense': {
                 const weekRef = ref.child(`league/${username}/defstats/${weekType}/${weekNumber}`);
                 const {} = JSON.parse(body);
-                weekRef.update(defStats);
+                weekRef.update(defensiveStats);
                 break;
             }
             default: {
                 const property = `player${capitalizeFirstLetter}`;
                 const weekRef = ref.child(`league/${username}/offstats/${weekType}/${weekNumber}`);
-                const {} = JSON.parse(body)[property];
-                weekRef.update(offStats);
+                const stats = JSON.parse(body)[property];
+                weekRef.update(stats);
                 break;
             }
         }
@@ -124,10 +124,10 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const {} = JSON.parse(body);
+        const { rosterInfoList: teams } = JSON.parse(body);
         const { params: { username } } = req;
         const teamRef = ref.child(`league/${username}/freeagents`);
-        teamRef.update(freeAgents);
+        teamRef.update(teams);
 
         res.sendStatus(200);
     });       
@@ -142,8 +142,8 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const {players} = JSON.parse(body);
-        const { params: {username} } = req;
+        const { rosterInfoList: players } = JSON.parse(body);
+        const { params: { username } } = req;
         const teamRef = ref.child(`league/${username}/players`);
         teamRef.update(players);
 
