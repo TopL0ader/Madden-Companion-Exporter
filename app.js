@@ -86,25 +86,25 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
     req.on('end', () => {
         switch (dataType) {
             case 'schedules': {
-                const weekRef = ref.child(`league/${username}/schedules/${weekType}/${weekNumber}`);
+                const weekRef = ref.child(`league/${username}/schedules/${weekType}/${weekNumber}/${dataType}`);
                 const {schedules} = JSON.parse(body);
                 weekRef.update(schedules);
                 break;
             }
             case 'teamstats': {
-                const weekRef = ref.child(`league/${username}/teamstats/${weekType}/${weekNumber}`);
+                const weekRef = ref.child(`league/${username}/teamstats/${weekType}/${weekNumber}/${dataType}`);
                 const {teamstats} = JSON.parse(body);
                 weekRef.update(teamstats);
                 break;
             }
             case 'defense': {
-                const weekRef = ref.child(`league/${username}/defstats/${weekType}/${weekNumber}`);
+                const weekRef = ref.child(`league/${username}/defstats/${weekType}/${weekNumber}/${dataType}`);
                 const {defstats} = JSON.parse(body);
                 weekRef.update(defstats);
                 break;
             }
             default: {
-                const weekRef = ref.child(`league/${username}/offstats/${weekType}/${weekNumber}`);
+                const weekRef = ref.child(`league/${username}/offstats/${weekType}/${weekNumber}/${dataType}`);
                 const {offstats} = JSON.parse(body);
                 weekRef.update(offstats);
                 break;
