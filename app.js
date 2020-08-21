@@ -86,27 +86,26 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
     req.on('end', () => {
         switch (dataType) {
             case 'schedules': {
-                const weekRef = ref.child(`league/${username}/week/${weekType}/${weekNumber}/${dataType}`);
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { gameScheduleInfoList: schedules } = JSON.parse(body);
                 weekRef.update(schedules);
                 break;
             }
             case 'teamstats': {
-                const weekRef = ref.child(`league/${username}/week/${weekType}/${weekNumber}/${dataType}`);
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { teamStatInfoList: teamStats } = JSON.parse(body);
                 weekRef.update(teamStats);
                 break;
             }
             case 'defense': {
-                const weekRef = ref.child(`league/${username}/week/${weekType}/${weekNumber}/${dataType}`);
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
                 weekRef.update(defensiveStats);
                 break;
             }
             default: {
-                const property = `player${capitalizeFirstLetter(dataType)}StatInfoList`;
-                const weekRef = ref.child(`league/${username}/week/${weekType}/${weekNumber}/${dataType}/${property}`);
-                const stats = JSON.parse(body)[property];
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { playerStatStatInfoList: stats } = JSON.parse(body);
                 weekRef.update(stats);
                 break;
             }
