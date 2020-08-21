@@ -104,8 +104,9 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
                 break;
             }
             default: {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
-                const { playerStatStatInfoList: stats } = JSON.parse(body);
+                const property = `player${capitalizeFirstLetter(dataType)}`;
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}/${property}`);
+                const stats = JSON.parse(body)[property];
                 weekRef.update(stats);
                 break;
             }
