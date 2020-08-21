@@ -27,7 +27,7 @@ app.get('/delete/:user', function(req, res) {
 });
 
 // league teams
-app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
+app.post('/:username/:platform/:leagueId/teams', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     let body = '';
