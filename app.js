@@ -27,7 +27,7 @@ app.get('/delete/:user', function(req, res) {
 });
 
 // league teams
-app.post('/:username/:platform/:leagueId/teams', (req, res) => {
+app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     let body = '';
@@ -38,7 +38,7 @@ app.post('/:username/:platform/:leagueId/teams', (req, res) => {
         const { leagueTeamInfoList: teams } = JSON.parse(body);
         const { params: { username, leagueId } } = req;
 
-        const teamRef = ref.child(`league/${username}/leagueteams`);
+        const teamRef = ref.child(`league/${username}/teams`);
         teamRef.update(teams);
         
         res.sendStatus(200);
