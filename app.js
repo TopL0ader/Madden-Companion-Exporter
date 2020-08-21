@@ -103,10 +103,28 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
                 weekRef.update(defensiveStats);
                 break;
             }
-            case 'stats': {
+            case 'passing': {
                 const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
-                const { statStatInfoList: stats } = JSON.parse(body);
-                weekRef.update(stats);
+                const { passingStatInfoList: passingStats } = JSON.parse(body);
+                weekRef.update(passingStats);
+                break;
+            }
+            case 'rushing': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { rushingStatInfoList: rushingStats } = JSON.parse(body);
+                weekRef.update(rushingStats);
+                break;
+            }
+            case 'recieving': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { receivingStatInfoList: receivingStats } = JSON.parse(body);
+                weekRef.update(receivingStats);
+                break;
+            }
+            case 'kicking': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { kickingStatInfoList: kickingStats } = JSON.parse(body);
+                weekRef.update(kickingStats);
                 break;
             }
         }
