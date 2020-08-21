@@ -103,10 +103,9 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
                 weekRef.update(defensiveStats);
                 break;
             }
-            default: {
-                const property = `player${capitalizeFirstLetter(dataType)}`;
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}/${property}`);
-                const stats = JSON.parse(body)[property];
+            case 'stats': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { statStatInfoList: stats } = JSON.parse(body);
                 weekRef.update(stats);
                 break;
             }
@@ -152,5 +151,5 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     });
 });
 app.listen(app.get('port'), () =>
-    console.log('Madden Data is running on port', app.get('port'))
+    console.log('MaddenPFL Data is running on port', app.get('port'))
 );
