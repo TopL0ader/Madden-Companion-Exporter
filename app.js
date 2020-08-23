@@ -161,9 +161,10 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     });
     req.on('end', () => {
         const { rosterInfoList: players } = JSON.parse(body);
-        const { params: { username, teamId} } = req;
-        const playerRef = ref.child(`league/${username}/players/${teamId}`);
-        playerRef.update(players);
+        const { params: { username} } = req;
+        const players = ref.child(`league/${username}/players`);
+        const players = {}; rosterInfoList.forEach(player => {players[player.rosterId] = player;
+        });
 
         res.sendStatus(200);
     });
