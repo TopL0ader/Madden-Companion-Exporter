@@ -155,25 +155,29 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
+    const {
+        params: { username, leagueId, teamId }
+    } = req;
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const { rosterInfoList: players } = JSON.parse(body);
-        const { params: { username} } = req;
-        const playersRef = ref.child(`league/${username}/players`);
-        const players = {}; rosterInfoList.forEach(player => {players[player.rosterId] = player;
+        const { rosterInfoList } = JSON.parse(body);
+        const dataRef = ref.child(
+            `league/${username}/teams/roster`
+        );
+        const players = {};
+        rosterInfoList.forEach(player => {
+            players[player.rosterId] = player;
         });
-        
-        playersRef.set(players, error => {
+        dataRef.set(players, error => {
             if (error) {
                 console.log('Data could not be saved.' + error);
             } else {
                 console.log('Data saved successfully.');
             }
-        });     
-
+        });
         res.sendStatus(200);
     });
 });
