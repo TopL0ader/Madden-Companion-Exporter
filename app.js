@@ -152,7 +152,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 });
 
 // team rosters
-app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
+app.post('/:username/:platform/:leagueId/rosters', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     const {
