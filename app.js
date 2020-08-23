@@ -162,9 +162,17 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList: players } = JSON.parse(body);
         const { params: { username} } = req;
-        const players = ref.child(`league/${username}/players`);
+        const playersRef = ref.child(`league/${username}/players`);
         const players = {}; rosterInfoList.forEach(player => {players[player.rosterId] = player;
         });
+        
+        playersRef.set(players, error => {
+            if (error) {
+                console.log('Data could not be saved.' + error);
+            } else {
+                console.log('Data saved successfully.');
+            }
+        });     
 
         res.sendStatus(200);
     });
