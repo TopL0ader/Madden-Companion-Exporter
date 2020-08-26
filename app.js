@@ -156,22 +156,22 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster',
 (req, res) => {
     const db = admin.database();
         const ref = db.ref();
-        const {params: { username, dataType },} = req;
-        const basePath = `league/${username}/`;
-        const rosterPath = `${basePath}roster`;
+        const {params: { username, leagueId, weekType, weekNumber, dataType },} = req;
+        const basePath = `data/${username}/${leagueId}/`;
+        const statsPath = `${basePath}stats`;
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString();
         });
         req.on('end', () => {
             switch (dataType) {
-                case 'roster': {
-                    const { rosterInfoList: rosters } = JSON.parse(body);
-                    rosters.forEach(roster => {
-                        const rosterRef = ref.child(
-                            `${rosterPath}/roster/${roster.rosterId}`
+                case 'defense': {
+                    const { rosterInfoList: roster } = JSON.parse(body);
+                    roster.forEach(stat => {
+                        const weekRef = ref.child(
+                            `${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`
                         );
-                        rosterRef.update(roster);
+                        weekRef.update(stat);
                     });
                     break;
                 }
