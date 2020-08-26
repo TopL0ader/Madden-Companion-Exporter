@@ -164,8 +164,8 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster',
     req.on('end', () => {
         switch (dataType) {
             case 'roster': {
+                const { rosterInfoList: roster } = JSON.parse(body);
                 const rosterRef = ref.child(`league/${username}/roster`);
-                const { gameScheduleInfoList: roster } = JSON.parse(body);
                 rosterRef.update(roster);
                 break;
             }
