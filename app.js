@@ -148,7 +148,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 });
 
 // team rosters
-app.set('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
+app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     let body = '';
@@ -156,10 +156,10 @@ app.set('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const { rosterInfoList: teams } = JSON.parse(body);
+        const { rosterInfoList: players } = JSON.parse(body);
         const { params: { username } } = req;
         const teamRef = ref.child(`league/${username}/players`);
-        teamRef.update(teams);
+        teamRef.update(players);
 
         res.sendStatus(200);
     });
