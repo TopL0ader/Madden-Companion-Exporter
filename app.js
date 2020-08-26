@@ -152,26 +152,29 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 });
 
 // team rosters
-app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
+app.post('/:username/:platform/:leagueId/team/:teamId/roster/:dataType', 
+(req, res) => {
     const db = admin.database();
     const ref = db.ref();
-    const { params: { username, dataType } } = req;
-
+    const { params: { username, dataType },} = req;
+    const basePath = `league/${username}/`;
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
     });
     req.on('end', () => {
-      switch (dataType) {
-        case 'roster': {
-            const teamRef = ref.child(`league/${username}/players/${dataType}`);
-            const { rosterInfoList: roster } = JSON.parse(body);
-            teamRef.update(roster);
-            break;
-
-        }
+        switch (dataType) {
+            case 'roster': {
+                const rosterRef = ref.child(
+                    `${basePath}roster}`
+                );
+                const { gameScheduleInfoList: roster } = JSON.parse(body);
+                rosterRef.update(roster);
+                break;
+            }
     }
     res.sendStatus(200);
+});
 });
 
 app.listen(app.get('port'), () =>
