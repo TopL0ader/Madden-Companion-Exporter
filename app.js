@@ -155,24 +155,31 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', 
 (req, res) => {
     const db = admin.database();
-    const ref = db.ref();
-    const { params: { username, dataType },} = req;
-    let body = '';
-    req.on('data', chunk => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        switch (dataType) {
-            case 'roster': {
-                const { rosterInfoList: roster } = JSON.parse(body);
-                const rosterRef = ref.child(`league/${username}/roster/${dataType}`);
-                rosterRef.update(roster);
-            break;
+        const ref = db.ref();
+        const {params: { username, dataType },} = req;
+        const basePath = `league/${username}/`;
+        const rosterPath = `${basePath}roster`;
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            switch (dataType) {
+                case 'roster': {
+                    const { rosterInfoList: rosters } = JSON.parse(body);
+                    rosters.forEach(roster => {
+                        const rosterRef = ref.child(
+                            `${rosterPath}/roster/${roster.rosterId}`
+                        );
+                        rosterRef.update(roster);
+                    });
+                    break;
+                }
             }
+
+            res.sendStatus(200);
+        });
     }
-    res.sendStatus(200);
-});
-}
 );
 
 app.listen(app.get('port'), () =>
