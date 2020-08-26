@@ -165,14 +165,15 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster',
         switch (dataType) {
             case 'roster': {
                 const { rosterInfoList: roster } = JSON.parse(body);
-                const rosterRef = ref.child(`league/${username}/roster`);
+                const rosterRef = ref.child(`league/${username}/roster/${dataType}`);
                 rosterRef.update(roster);
-                break;
+            break;
             }
     }
     res.sendStatus(200);
 });
-});
+}
+);
 
 app.listen(app.get('port'), () =>
     console.log('MaddenPFL Data is running on port', app.get('port'))
