@@ -166,7 +166,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster',
         switch (dataType) {
             case 'roster': {
                 const rosterRef = ref.child(
-                    `${basePath}roster}`
+                    `${basePath}roster/${dataType}}`
                 );
                 const { gameScheduleInfoList: roster } = JSON.parse(body);
                 rosterRef.update(roster);
