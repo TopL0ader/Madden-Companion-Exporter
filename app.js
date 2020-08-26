@@ -153,21 +153,27 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 
 // team rosters
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
-const db = admin.database();
-const ref = db.ref();
-let body = '';
-req.on('data', chunk => {
-    body += chunk.toString();
-});
-req.on('end', () => {
-    const { rosterInfoList: players } = JSON.parse(body);
-    const { params: { username, teamId} } = req;
-    const playerRef = ref.child(`league/${username}/players/${teamId}`);
-    playerRef.update(players);
+    const db = admin.database();
+    const ref = db.ref();
+    const { params: { username, dataType } } = req;
 
-    res.sendStatus(200);
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
     });
+    req.on('end', () => {
+      switch (dataType) {
+        case 'roster': {
+            const teamRef = ref.child(`league/${username}/players/${dataType}`);
+            const { rosterInfoList: roster } = JSON.parse(body);
+            teamRef.update(roster);
+            break;
+
+        }
+    }
+    res.sendStatus(200);
 });
+
 app.listen(app.get('port'), () =>
     console.log('MaddenPFL Data is running on port', app.get('port'))
 );
