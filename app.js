@@ -74,10 +74,6 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
     const db = admin.database();
     const ref = db.ref();
     const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
-
-    //const basePath = `${username}/data/week/${weekType}/${weekNumber}/${dataType}`;
-    
-    // "defense", "kicking", "passing", "punting", "receiving", "rushing"
     
     let body = '';
     req.on('data', chunk => {
@@ -152,7 +148,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 });
 
 // team rosters
-app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
+app.set('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
     let body = '';
