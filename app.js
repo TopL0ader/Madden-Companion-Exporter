@@ -157,7 +157,6 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster',
     const db = admin.database();
     const ref = db.ref();
     const { params: { username, dataType },} = req;
-    const basePath = `league/${username}/`;
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -165,9 +164,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster',
     req.on('end', () => {
         switch (dataType) {
             case 'roster': {
-                const rosterRef = ref.child(
-                    `${basePath}roster/${dataType}}`
-                );
+                const rosterRef = ref.child(`league/${username}/roster`);
                 const { gameScheduleInfoList: roster } = JSON.parse(body);
                 rosterRef.update(roster);
                 break;
