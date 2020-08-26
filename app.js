@@ -152,36 +152,22 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 });
 
 // team rosters
-app.post('/:username/:platform/:leagueId/team/:teamId/roster', 
-(req, res) => {
+app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
-        const ref = db.ref();
-        const {params: { username, leagueId, weekType, weekNumber, dataType },} = req;
-        const basePath = `data/${username}/${leagueId}/`;
-        const statsPath = `${basePath}stats`;
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
-        req.on('end', () => {
-            switch (dataType) {
-                case 'defense': {
-                    const { rosterInfoList: roster } = JSON.parse(body);
-                    roster.forEach(stat => {
-                        const weekRef = ref.child(
-                            `${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`
-                        );
-                        weekRef.update(stat);
-                    });
-                    break;
-                }
-            }
+    const ref = db.ref();
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const { rosterInfoList: teams } = JSON.parse(body);
+        const { params: { username } } = req;
+        const teamRef = ref.child(`league/${username}/players`);
+        teamRef.update(teams);
 
-            res.sendStatus(200);
-        });
-    }
-);
-
+        res.sendStatus(200);
+    });
+});
 app.listen(app.get('port'), () =>
     console.log('MaddenPFL Data is running on port', app.get('port'))
 );
