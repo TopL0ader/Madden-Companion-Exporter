@@ -10,18 +10,6 @@ admin.initializeApp({
     databaseURL: "https://cfm-stats.firebaseio.com/"
 });
 
-const express = require('express');
-const admin = require("firebase-admin");
-
-const app = express();
-
-const serviceAccount = require("./cfm-stats-firebase-adminsdk-bhkp7-2216e74e82.json");
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://cfm-stats.firebaseio.com/"
-});
-
 app.set('port', (process.env.PORT || 5000));
 
 // get user 
