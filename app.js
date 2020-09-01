@@ -156,11 +156,11 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const { rosterInfoList: teams } = JSON.parse(body);
+        const { rosterInfoList: players } = JSON.parse(body);
         const { params: { username, teamId} } = req;
-        const teamRef = ref.childbyAutoId(`league/${username}/players/${teamId}`);
-        teamRef.update(teams);
-
+        const playerRef = ref.child(`league/${username}/players/${teamId}`);
+        playerRef.update(players);
+    
         res.sendStatus(200);
     });
 });
