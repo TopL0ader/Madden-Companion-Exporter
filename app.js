@@ -10,6 +10,18 @@ admin.initializeApp({
     databaseURL: "https://cfm-stats.firebaseio.com/"
 });
 
+const express = require('express');
+const admin = require("firebase-admin");
+
+const app = express();
+
+const serviceAccount = require("./cfm-stats-firebase-adminsdk-bhkp7-2216e74e82.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://cfm-stats.firebaseio.com/"
+});
+
 app.set('port', (process.env.PORT || 5000));
 
 // get user 
@@ -38,7 +50,7 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
         const { leagueTeamInfoList: teams } = JSON.parse(body);
         const { params: { username, leagueId } } = req;
 
-        const teamRef = ref.child(`${username}/data/leagueteams/leagueTeamInfoList`);
+        const teamRef = ref.child(`league/${username}/teams`);
         teamRef.update(teams);
         
         res.sendStatus(200);
@@ -55,9 +67,9 @@ app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     });
     req.on('end', () => {
         const { teamStandingInfoList: teams } = JSON.parse(body);
-        const {params: { username, leagueId }} = req;
+        const {params: { username }} = req;
 
-        const teamRef = ref.child(`${username}/data/standings/teamStandingInfoList`);
+        const teamRef = ref.child(`league/${username}/standings`);
         teamRef.update(teams);
 
         res.sendStatus(200);
@@ -75,9 +87,6 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
     const ref = db.ref();
     const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
 
-    //const basePath = `${username}/data/week/${weekType}/${weekNumber}/${dataType}`;
-    
-    // "defense", "kicking", "passing", "punting", "receiving", "rushing"
     
     let body = '';
     req.on('data', chunk => {
@@ -86,34 +95,52 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
     req.on('end', () => {
         switch (dataType) {
             case 'schedules': {
-                const weekRef = ref.child(`${username}/data/week/${weekType}/${weekNumber}/${dataType}/gameScheduleInfoList`);
+                const weekRef = ref.child(`league/${username}/schedules/${weekType}/${weekNumber}/${dataType}`);
                 const { gameScheduleInfoList: schedules } = JSON.parse(body);
                 weekRef.update(schedules);
                 break;
             }
             case 'teamstats': {
-                const weekRef = ref.child(`${username}/data/week/${weekType}/${weekNumber}/${dataType}/teamStatInfoList`);
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { teamStatInfoList: teamStats } = JSON.parse(body);
                 weekRef.update(teamStats);
                 break;
             }
             case 'defense': {
-                const weekRef = ref.child(`${username}/data/week/${weekType}/${weekNumber}/${dataType}/playerDefensiveStatInfoList`);
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
                 weekRef.update(defensiveStats);
                 break;
             }
-            default: {
-                const property = `player${capitalizeFirstLetter(dataType)}StatInfoList`;
-                const weekRef = ref.child(`${username}/data/week/${weekType}/${weekNumber}/${dataType}/${property}`);
-                const stats = JSON.parse(body)[property];
-                weekRef.update(stats);
+            case 'passing': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { playerPassingStatInfoList: passingStats } = JSON.parse(body);
+                weekRef.update(passingStats);
+                break;
+            }
+            case 'rushing': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { playerRushingStatInfoList: rushingStats } = JSON.parse(body);
+                weekRef.update(rushingStats);
+                break;
+            }
+            case 'recieving': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { playerReceivingStatInfoList: receivingStats } = JSON.parse(body);
+                weekRef.update(receivingStats);
+                break;
+            }
+            case 'kicking': {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
+                const { playerKickingStatInfoList: kickingStats } = JSON.parse(body);
+                weekRef.update(kickingStats);
                 break;
             }
         }
         res.sendStatus(200);
     });
 });
+
 
 // free agents
 app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
@@ -126,7 +153,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList: teams } = JSON.parse(body);
         const { params: { username } } = req;
-        const teamRef = ref.child(`${username}/data/freeagents/rosterInfoList`);
+        const teamRef = ref.child(`league/${username}/freeagents`);
         teamRef.update(teams);
 
         res.sendStatus(200);
@@ -143,13 +170,13 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     });
     req.on('end', () => {
         const { rosterInfoList: teams } = JSON.parse(body);
-        const { params: { username, teamId } } = req;
-        const teamRef = ref.child(`${username}/data/team/${teamId}/rosterInfoList`);
+        const { params: { username } } = req;
+        const teamRef = ref.child(`league/${username}/players`);
         teamRef.update(teams);
 
         res.sendStatus(200);
     });
 });
 app.listen(app.get('port'), () =>
-    console.log('Madden Data is running on port', app.get('port'))
+    console.log('MaddenPFL Data is running on port', app.get('port'))
 );
