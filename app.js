@@ -74,7 +74,6 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
     const db = admin.database();
     const ref = db.ref();
     const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
-
     
     let body = '';
     req.on('data', chunk => {
@@ -158,8 +157,8 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     });
     req.on('end', () => {
         const { rosterInfoList: teams } = JSON.parse(body);
-        const { params: { username, playerId} = req;
-        const teamRef = ref.child(`league/${username}/players`);
+        const { params: { username, playerId} } = req;
+        const teamRef = ref.child(`league/${username}/players/${playerId}`);
         teamRef.update(teams);
 
         res.sendStatus(200);
