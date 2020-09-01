@@ -159,7 +159,6 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
         const { rosterInfoList: teams } = JSON.parse(body);
         const { params: { username, rosterId} } = req;
         const teamRef = ref.childbyAutoId(`league/${username}/players/${rosterId}`);
-        let rosterId = snapshot.child("rosterId").val();
         teamRef.update(teams);
 
         res.sendStatus(200);
