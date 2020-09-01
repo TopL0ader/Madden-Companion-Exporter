@@ -112,7 +112,7 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
                 weekRef.update(rushingStats);
                 break;
             }
-            case 'recieving': {
+            case 'receiving': {
                 const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { playerReceivingStatInfoList: receivingStats } = JSON.parse(body);
                 weekRef.update(receivingStats);
