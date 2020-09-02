@@ -20,7 +20,7 @@ app.get('/:user', function(req, res) {
 // delete user data
 app.get('/delete/:user', function(req, res) {
     const db = admin.firestore();
-    const ref = db.ref();
+    const ref = doc.ref();
     const dataRef = ref.child(req.params.user);
     dataRef.remove();
     return res.send('Madden Data Cleared for ' + req.params.user);
@@ -29,7 +29,7 @@ app.get('/delete/:user', function(req, res) {
 // league teams
 app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
     const db = admin.firestore();
-    //const ref = db.ref();
+    const ref = doc.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -48,7 +48,7 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
 // standings
 app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     const db = admin.firestore();
-    //const ref = db.ref();
+    const ref = doc.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -72,7 +72,7 @@ function capitalizeFirstLetter(string) {
 // schedules and stats
 app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', (req, res) => {
     const db = admin.firestore();
-    //const ref = db.ref();
+    const ref = doc.ref();
     const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
 
     let body = '';
@@ -132,7 +132,7 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
 // free agents
 app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     const db = admin.firestore();
-    //const ref = db.ref();
+    const ref = doc.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -150,7 +150,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 // team rosters
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.firestore();
-    //const ref = db.ref();
+    const ref = doc.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
