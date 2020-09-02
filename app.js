@@ -19,7 +19,7 @@ app.get('/:user', function(req, res) {
 
 // delete user data
 app.get('/delete/:user', function(req, res) {
-    const db = admin.database();
+    const db = admin.firestore();
     const ref = db.ref();
     const dataRef = ref.child(req.params.user);
     dataRef.remove();
@@ -28,7 +28,7 @@ app.get('/delete/:user', function(req, res) {
 
 // league teams
 app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
-    const db = admin.database();
+    const db = admin.firestore();
     const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
@@ -47,7 +47,7 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
 
 // standings
 app.post('/:username/:platform/:leagueId/standings', (req, res) => {
-    const db = admin.database();
+    const db = admin.firestore();
     const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
@@ -71,7 +71,7 @@ function capitalizeFirstLetter(string) {
 
 // schedules and stats
 app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', (req, res) => {
-    const db = admin.database();
+    const db = admin.firestore();
     const ref = db.ref();
     const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
     
@@ -131,7 +131,7 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
 
 // free agents
 app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
-    const db = admin.database();
+    const db = admin.firestore();
     const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
@@ -149,7 +149,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 
 // team rosters
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
-    const db = admin.database();
+    const db = admin.firestore();
     const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
