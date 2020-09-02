@@ -19,8 +19,8 @@ app.get('/:user', function(req, res) {
 
 // delete user data
 app.get('/delete/:user', function(req, res) {
-    const doc = admin.firestore();
-    const ref = doc.ref();
+    const db = admin.database();
+    const ref = db.ref();
     const dataRef = ref.child(req.params.user);
     dataRef.remove();
     return res.send('Madden Data Cleared for ' + req.params.user);
@@ -28,8 +28,8 @@ app.get('/delete/:user', function(req, res) {
 
 // league teams
 app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
-    const doc = admin.firestore();
-    const ref = doc.ref();
+    const db = admin.database();
+    const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -47,8 +47,8 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
 
 // standings
 app.post('/:username/:platform/:leagueId/standings', (req, res) => {
-    const doc = admin.firestore();
-    const ref = doc.ref();
+    const db = admin.database();
+    const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -71,9 +71,10 @@ function capitalizeFirstLetter(string) {
 
 // schedules and stats
 app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', (req, res) => {
-    const doc = admin.firestore();
-    const ref = doc.ref();
+    const db = admin.database();
+    const ref = db.ref();
     const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
+
 
     let body = '';
     req.on('data', chunk => {
@@ -131,8 +132,8 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
 
 // free agents
 app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
-    const doc = admin.firestore();
-    const ref = doc.ref();
+    const db = admin.database();
+    const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
@@ -149,17 +150,17 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 
 // team rosters
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
-    const doc = admin.firestore();
-    const ref = doc.ref();
+    const db = admin.database();
+    const ref = db.ref();
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const { rosterInfoList: players } = JSON.parse(body);
-        const { params: { username, teamId} } = req;
-        const playerRef = ref.child(`league/${username}/players/${teamId}`);
-        playerRef.update(players);
+        const { rosterInfoList: teams } = JSON.parse(body);
+        const { params: { username, teamId } } = req;
+        const teamRef = ref.child(`league/${username}/players/${teamId}`);
+        teamRef.update(teams);
 
         res.sendStatus(200);
     });
