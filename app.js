@@ -3,6 +3,10 @@ const admin = require("firebase-admin");
 
 const app = express();
 
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
+
 const serviceAccount = require("./cfm-stats-firebase-adminsdk-bhkp7-2216e74e82.json");
 
 admin.initializeApp({
