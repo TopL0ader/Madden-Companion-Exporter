@@ -156,15 +156,16 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
+    const { params: { username, teamId } } = req;
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const { rosterInfoList: teams } = JSON.parse(body);
-        const { params: { username, teamId } } = req;
+        const {rosterInfoList} = JSON.parse(body);
         const teamRef = ref.child(`league/${username}/players/${teamId}`);
-        teamRef.update(teams);
+        const players = {};rosterInfoList.forEach(player => {players[player.rosterId] = player;});
+        teamRef.update(players);
 
         res.sendStatus(200);
     });
