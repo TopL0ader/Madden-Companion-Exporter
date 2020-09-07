@@ -135,7 +135,20 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
 
 // team rosters
 app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
-    res.sendStatus(200);
+    const db = admin.database();
+    const ref = db.ref();
+    const { params: { username } } = req;
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
+    req.on('end', () => {
+        const {rosterInfoList} = JSON.parse(body);
+        const teamRef = ref.child(`league/${username}/players/0/`);
+        const players = {};rosterInfoList.forEach(player => {players[player.rosterId] = player;});
+        teamRef.update(players);
+
+        res.sendStatus(200);
 });
 
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
