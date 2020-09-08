@@ -97,7 +97,7 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
             case 'teamstats': {
                 const { teamStatInfoList: teamStats } = JSON.parse(body);
                 teamStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/}/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
                 weekRef.update(stat);
             });
                 break;
