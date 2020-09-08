@@ -43,7 +43,7 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
         const { params: { username, leagueId } } = req;
         teams.forEach(team => {
         const teamRef = ref.child(`league/${username}/teams/${team.teamId}`);
-        teamRef.update(teams);
+        teamRef.update(team);
     });
         res.sendStatus(200);
     });
