@@ -87,7 +87,7 @@ app.post(
         // "defense", "kicking", "passing", "punting", "receiving", "rushing"
 
 
-        //const statsPath = `${basePath}stats`;
+        const statsPath = `${basePath}stats`;
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString();
@@ -103,7 +103,7 @@ app.post(
                 case 'teamstats': {
                     const { teamStatInfoList: teamStats } = JSON.parse(body);
                     teamStats.forEach(stat => {
-                        const weekRef = ref.child(`${basePath}stats/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
+                        const weekRef = ref.child(`${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
                         weekRef.update(stat);
                     });
                     break;
@@ -111,7 +111,7 @@ app.post(
                 case 'defense': {
                     const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
                     defensiveStats.forEach(stat => {
-                        const weekRef = ref.child(`${basePath}stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                        const weekRef = ref.child(`${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
                         weekRef.update(stat);
                     });
                     break;
@@ -122,7 +122,7 @@ app.post(
                     )}StatInfoList`;
                     const stats = JSON.parse(body)[property];
                     stats.forEach(stat => {
-                        const weekRef = ref.child(`${basePath}stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                        const weekRef = ref.child(`${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
                         weekRef.update(stat);
                     });
                     break;
@@ -143,11 +143,10 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
         body += chunk.toString();
     });
     req.on('end', () => {
-        const { rosterInfoList } = JSON.parse(body);
+        const { rosterInfoList: teams } = JSON.parse(body);
         const { params: { username } } = req;
         const teamRef = ref.child(`league/${username}/players/0`);
-        const players = {};rosterInfoList.forEach(player => {players[player.rosterId] = player;});
-        teamRef.update(players);
+        teamRef.update(teams);
 
         res.sendStatus(200);
     });       
