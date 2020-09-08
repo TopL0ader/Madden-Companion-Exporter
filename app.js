@@ -61,9 +61,7 @@ app.post('/:username/:platform/:leagueId/standings', (req, res) => {
         const {params: { username, leagueId }} = req;
 
         teams.forEach(team => {
-            const teamRef = ref.child(
-                `league/${username}/teams/${team.teamId}`
-            );
+            const teamRef = ref.child(`league/${username}/teams/${team.teamId}`);
             teamRef.update(team);
         });
 
@@ -80,9 +78,7 @@ app.post(
     (req, res) => {
         const db = admin.database();
         const ref = db.ref();
-        const {
-            params: { username, leagueId, weekType, weekNumber, dataType },
-        } = req;
+        const {params: { username, leagueId, weekType, weekNumber, dataType },} = req;
         const basePath = `league/${username}/`;
 
         // "defense", "kicking", "passing", "punting", "receiving", "rushing"
@@ -96,9 +92,7 @@ app.post(
         req.on('end', () => {
             switch (dataType) {
                 case 'schedules': {
-                    const weekRef = ref.child(
-                        `${basePath}schedules/${weekType}/${weekNumber}`
-                    );
+                    const weekRef = ref.child( `${basePath}schedules/${weekType}/${weekNumber}`);
                     const { gameScheduleInfoList: schedules } = JSON.parse(body);
                     weekRef.update(schedules);
                     break;
@@ -106,9 +100,7 @@ app.post(
                 case 'teamstats': {
                     const { teamStatInfoList: teamStats } = JSON.parse(body);
                     teamStats.forEach(stat => {
-                        const weekRef = ref.child(
-                            `${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/team-stats`
-                        );
+                        const weekRef = ref.child(`${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/team-stats);
                         weekRef.update(stat);
                     });
                     break;
