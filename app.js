@@ -49,7 +49,6 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
     });
 });
 
-// standings
 app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
@@ -60,106 +59,86 @@ app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     req.on('end', () => {
         const { teamStandingInfoList: teams } = JSON.parse(body);
         const {params: { username, leagueId }} = req;
+
         teams.forEach(team => {
-        const teamRef = ref.child(`league/${username}/teams/${team.teamId}`);
-        teamRef.update(team);
+            const teamRef = ref.child(
+                `league/${username}/teams/${team.teamId}`
+            );
+            teamRef.update(team);
         });
 
         res.sendStatus(200);
     });
 });
 
-// capitalize first letter
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// schedules and stats
-app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', (req, res) => {
-    const db = admin.database();
-    const ref = db.ref();
-    const { params: { username, leagueId, weekType, weekNumber, dataType }, } = req;
+app.post(
+    '/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType',
+    (req, res) => {
+        const db = admin.database();
+        const ref = db.ref();
+        const {
+            params: { username, leagueId, weekType, weekNumber, dataType },
+        } = req;
+        const basePath = `league/${username}/`;
+
+        // "defense", "kicking", "passing", "punting", "receiving", "rushing"
 
 
-    let body = '';
-    req.on('data', chunk => {
-        body += chunk.toString();
-    });
-    req.on('end', () => {
-        switch (dataType) {
-            case 'schedules': {
-                const weekRef = ref.child(`league/${username}/schedules/${weekType}/${weekNumber}/${dataType}`);
-                const { gameScheduleInfoList: schedules } = JSON.parse(body);
-                weekRef.update(schedules);
-                break;
-            }
-
-            case 'teamstats': {
-                const { teamStatInfoList: teamStats } = JSON.parse(body);
-                teamStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
-                weekRef.update(stat);
-            });
-                break;
-            }
-            case 'defense': {
-                const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
-                defensiveStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
-                weekRef.update(stat);
-            });
-                break;
-            }
-            case 'passing': {
-                const { playerPassinngStatInfoList: passingStats } = JSON.parse(body);
-                passingStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
-                weekRef.update(stat);
-            });
-                break;
-            }
-            case 'rushing': {
-                const { playerRushingStatInfoList: rushingStats } = JSON.parse(body);
-                rushingStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
-                weekRef.update(stat);
-            });
-                break;
-            }
-            case 'recieving': {
-                const { playerRecievingStatInfoList: recievingStats } = JSON.parse(body);
-                recievingStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
-                weekRef.update(stat);
-            });
-                break;
-            }
-            case 'kicking': {
-                const { playerKickingStatInfoList: kickingStats } = JSON.parse(body);
-                kickingStats.forEach(stat => {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
-                weekRef.update(stat);
-            });
-                break;
-            }
-            default: {
-                const property = `player${capitalizeFirstLetter(
-                    dataType
-                )}StatInfoList`;
-                const stats = JSON.parse(body)[property];
-                stats.forEach(stat => {
+        const statsPath = `${basePath}stats`;
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            switch (dataType) {
+                case 'schedules': {
                     const weekRef = ref.child(
-                        `league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`
+                        `${basePath}schedules/${weekType}/${weekNumber}`
                     );
-                    weekRef.update(stat);
-                });
-                break;
+                    const { gameScheduleInfoList: schedules } = JSON.parse(body);
+                    weekRef.update(schedules);
+                    break;
+                }
+                case 'teamstats': {
+                    const { teamStatInfoList: teamStats } = JSON.parse(body);
+                    teamStats.forEach(stat => {
+                        const weekRef = ref.child(
+                            `${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/team-stats`
+                        );
+                        weekRef.update(stat);
+                    });
+                    break;
+                }
+                case 'defense': {
+                    const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
+                    defensiveStats.forEach(stat => {
+                        const weekRef = ref.child(`${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                        weekRef.update(stat);
+                    });
+                    break;
+                }
+                default: {
+                    const property = `player${capitalizeFirstLetter(
+                        dataType
+                    )}StatInfoList`;
+                    const stats = JSON.parse(body)[property];
+                    stats.forEach(stat => {
+                        const weekRef = ref.child(
+                            `${statsPath}/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`
+                        );
+                        weekRef.update(stat);
+                    });
+                    break;
+                }
             }
-        }
 
-        res.sendStatus(200);
-    });
-}
+            res.sendStatus(200);
+        });
+    }
 );
 
 // free agents
