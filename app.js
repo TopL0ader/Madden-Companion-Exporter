@@ -59,10 +59,11 @@ app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     });
     req.on('end', () => {
         const { teamStandingInfoList: teams } = JSON.parse(body);
-        const {params: { username }} = req;
-
-        const teamRef = ref.child(`league/${username}/standings`);
-        teamRef.update(teams);
+        const {params: { username, leagueId }} = req;
+        teams.forEach(team => {
+        const teamRef = ref.child(`league/${username}/teams/${team.teamId}`);
+        teamRef.update(team);
+        });
 
         res.sendStatus(200);
     });
@@ -92,40 +93,53 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
                 weekRef.update(schedules);
                 break;
             }
+
             case 'teamstats': {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { teamStatInfoList: teamStats } = JSON.parse(body);
-                weekRef.update(teamStats);
+                teamStats.forEach(stat => {
+                const weekRef = ref.child(`league/${username}/stats/}/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
+                weekRef.update(stat);
+            });
                 break;
             }
             case 'defense': {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
-                weekRef.update(defensiveStats);
+                defensiveStats.forEach(stat => {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                weekRef.update(stat);
+            });
                 break;
             }
             case 'passing': {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
-                const { playerPassingStatInfoList: passingStats } = JSON.parse(body);
-                weekRef.update(passingStats);
+                const { playerPassinngStatInfoList: passingStats } = JSON.parse(body);
+                passingStats.forEach(stat => {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                weekRef.update(stat);
+            });
                 break;
             }
             case 'rushing': {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { playerRushingStatInfoList: rushingStats } = JSON.parse(body);
-                weekRef.update(rushingStats);
+                rushingStats.forEach(stat => {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                weekRef.update(stat);
+            });
                 break;
             }
-            case 'receiving': {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
-                const { playerReceivingStatInfoList: receivingStats } = JSON.parse(body);
-                weekRef.update(receivingStats);
+            case 'recieving': {
+                const { playerRecievingStatInfoList: recievingStats } = JSON.parse(body);
+                recievingStats.forEach(stat => {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                weekRef.update(stat);
+            });
                 break;
             }
             case 'kicking': {
-                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${dataType}`);
                 const { playerKickingStatInfoList: kickingStats } = JSON.parse(body);
-                weekRef.update(kickingStats);
+                kickingStats.forEach(stat => {
+                const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                weekRef.update(stat);
+            });
                 break;
             }
         }
