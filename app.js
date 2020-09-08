@@ -50,7 +50,7 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
     });
 });
 
-///////////////////// league teams
+///////////////////// standings
 
 app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     const db = admin.database();
@@ -95,8 +95,10 @@ app.post(
         req.on('end', () => {
             switch (dataType) {
                 case 'schedules': {
-                    const weekRef = ref.child( `league/${username}/schedules/${weekType}/${weekNumber}`);
-                    const { gameScheduleInfoList: schedules } = JSON.parse(body);
+const { gameScheduleInfoList: schedules } = JSON.parse(body);
+                    teamStats.forEach(schedules => {
+const weekRef = ref.child( `league/${username}/schedules/${weekType}/${weekNumber}/${schedules.scheduleId}`);
+                    
                     weekRef.update(schedules);
                     break;
                 }
