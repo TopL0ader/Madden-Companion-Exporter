@@ -142,10 +142,25 @@ app.post('/:username/:platform/:leagueId/week/:weekType/:weekNumber/:dataType', 
             });
                 break;
             }
+            default: {
+                const property = `player${capitalizeFirstLetter(
+                    dataType
+                )}StatInfoList`;
+                const stats = JSON.parse(body)[property];
+                stats.forEach(stat => {
+                    const weekRef = ref.child(
+                        `league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`
+                    );
+                    weekRef.update(stat);
+                });
+                break;
+            }
         }
+
         res.sendStatus(200);
     });
-});
+}
+);
 
 // free agents
 app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
