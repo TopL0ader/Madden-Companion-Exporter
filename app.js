@@ -50,7 +50,7 @@ app.post('/:username/:platform/:leagueId/leagueteams', (req, res) => {
     });
 });
 
-///////////////////// league teams
+///////////////////// league standings
 
 app.post('/:username/:platform/:leagueId/standings', (req, res) => {
     const db = admin.database();
@@ -82,12 +82,6 @@ app.post(
         const db = admin.database();
         const ref = db.ref();
         const {params: { username, leagueId, weekType, weekNumber, dataType },} = req;
-        
-
-        // "defense", "kicking", "passing", "punting", "receiving", "rushing"
-
-
-        
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString();
@@ -95,9 +89,11 @@ app.post(
         req.on('end', () => {
             switch (dataType) {
                 case 'schedules': {
-                    const weekRef = ref.child( `league/${username}/schedules/${schedules.scheduleId}`);
                     const { gameScheduleInfoList: schedules } = JSON.parse(body);
-                    weekRef.update(schedules);
+                    schedules.forEach(schedule => {
+                        const weekRef = ref.child(`league/${username}/stats/${schedule.scheduleId}/stats}`);
+                        weekRef.update(schedule);
+                    });
                     break;
                 }
                 case 'teamstats': {
