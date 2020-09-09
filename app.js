@@ -99,7 +99,7 @@ app.post(
                 case 'teamstats': {
                     const { teamStatInfoList: teamStats } = JSON.parse(body);
                     teamStats.forEach(stat => {
-                        const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/team-stats`);
+                        const weekRef = ref.child(`league/${username}/team-stats/${stat.teamId}`);
                         weekRef.update(stat);
                     });
                     break;
@@ -107,7 +107,7 @@ app.post(
                 case 'defense': {
                     const { playerDefensiveStatInfoList: defensiveStats } = JSON.parse(body);
                     defensiveStats.forEach(stat => {
-                        const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                        const weekRef = ref.child(`league/${username}/player-stats/${stat.statId}`);
                         weekRef.update(stat);
                     });
                     break;
@@ -118,7 +118,7 @@ app.post(
                     )}StatInfoList`;
                     const stats = JSON.parse(body)[property];
                     stats.forEach(stat => {
-                        const weekRef = ref.child(`league/${username}/stats/${weekType}/${weekNumber}/${stat.teamId}/player-stats/${stat.rosterId}`);
+                        const weekRef = ref.child(`league/${username}/player-stats/${stat.statId}`);
                         weekRef.update(stat);
                     });
                     break;
