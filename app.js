@@ -95,7 +95,7 @@ app.post(
         req.on('end', () => {
             switch (dataType) {
                 case 'schedules': {
-                    const weekRef = ref.child( `league/${username}/schedules/${weekType}/${weekNumber}`);
+                    const weekRef = ref.child( `league/${username}/schedules/${schedules.scheduleId}`);
                     const { gameScheduleInfoList: schedules } = JSON.parse(body);
                     weekRef.update(schedules);
                     break;
