@@ -91,7 +91,7 @@ app.post(
                 case 'schedules': {
                     const { gameScheduleInfoList: schedules } = JSON.parse(body);
                     schedules.forEach(schedule => {
-                        const weekRef = ref.child(`league/${username}/stats/${schedule.scheduleId}`);
+                        const weekRef = ref.child(`league/${username}/schedules/${schedule.scheduleId}`);
                         weekRef.update(schedule);
                     });
                     break;
