@@ -4,7 +4,7 @@ const admin = require("firebase-admin");
 const app = express();
 
 app.get('/', function (req, res) {
-  res.send('Players Test!');
+  res.send('MaddenPFL.com');
 });
 
 const serviceAccount = require("./cfm-stats-firebase-adminsdk-bhkp7-2216e74e82.json");
