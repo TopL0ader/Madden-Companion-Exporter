@@ -4,7 +4,7 @@ const admin = require("firebase-admin");
 const app = express();
 
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+  res.send('Players Test!');
 });
 
 const serviceAccount = require("./cfm-stats-firebase-adminsdk-bhkp7-2216e74e82.json");
@@ -152,15 +152,15 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
 app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     const db = admin.database();
     const ref = db.ref();
-    const { params: { username, teamId } } = req;
+    const { params: { username, rosterId } } = req;
     let body = '';
     req.on('data', chunk => {
         body += chunk.toString();
     });
     req.on('end', () => {
         const {rosterInfoList} = JSON.parse(body);
-        const teamRef = ref.child(`league/${username}/players/${teamId}`);
-        const players = {};rosterInfoList.forEach(player => {players[player.teamId] = player;});
+        const teamRef = ref.child(`league/${username}/players/${rosterId}`);
+        const players = {};rosterInfoList.forEach(player => {players[player.rosterId] = player;});
         teamRef.update(players);
 
         res.sendStatus(200);
