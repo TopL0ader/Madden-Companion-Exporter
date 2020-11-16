@@ -141,7 +141,7 @@ app.post('/:username/:platform/:leagueId/freeagents/roster', (req, res) => {
     req.on('end', () => {
         const { rosterInfoList: teams } = JSON.parse(body);
         const { params: { username } } = req;
-        const teamRef = ref.child(`league/${username}/players/0`);
+        const teamRef = ref.child(`league/${username}/players`);
         teamRef.update(teams);
 
         res.sendStatus(200);
