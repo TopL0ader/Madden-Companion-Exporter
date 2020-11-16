@@ -159,7 +159,7 @@ app.post('/:username/:platform/:leagueId/team/:teamId/roster', (req, res) => {
     });
     req.on('end', () => {
         const {rosterInfoList} = JSON.parse(body);
-        const teamRef = ref.child(`league/${username}/players/${rosterId}`);
+        const teamRef = ref.child(`league/${username}/players/${teamId}`);
         const players = {};rosterInfoList.forEach(player => {players[player.teamId] = player;});
         teamRef.update(players);
 
