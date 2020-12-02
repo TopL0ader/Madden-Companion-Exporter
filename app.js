@@ -7,11 +7,11 @@ app.get('/', function (req, res) {
   res.send('MaddenPFL.com');
 });
 
-const serviceAccount = require("./cfm-stats-firebase-adminsdk-bhkp7-2216e74e82.json");
+const serviceAccount = require("");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://cfm-stats.firebaseio.com/"
+    databaseURL: ""
 });
 
 app.set('port', (process.env.PORT || 5000));
